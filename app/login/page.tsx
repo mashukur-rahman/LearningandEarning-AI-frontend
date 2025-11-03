@@ -2,25 +2,59 @@
 
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { login } = useAuth();
 
-    const [credential, setCredential] = useState({
-        email: "",
-        password: "",
-    });
+  const [credential, setCredential] = useState({
+    email: "",
+    password: "",
+  });
 
-    const handleChange = (e) => {
-        console.log(e.target.name, e.target.value);
-        setCredential({ ...credential, [e.target.name]: e.target.value });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError("");
+    setCredential({ ...credential, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const success = await login(credential.email, credential.password);
+
+      if (success) {
+        // Small delay for UX
+        await new Promise((resolve) => setTimeout(resolve, 300));
+
+        // Route based on user role
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          const user = JSON.parse(storedUser);
+          if (user.role === "freelancer") {
+            router.push("/freelancer-dashboard");
+          } else if (user.role === "client") {
+            router.push("/client-dashboard");
+          }
+        }
+      } else {
+        setError("Invalid email or password");
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again.");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(credential);
-    }
+  };
 
 
 
@@ -28,7 +62,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-black">
       <Navbar />
-      
+
       {/* Main Login Container */}
       <div className="flex min-h-[calc(100vh-80px)] items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
@@ -45,11 +79,21 @@ export default function LoginPage() {
               <h1 className="mb-2 text-3xl font-bold text-white">Welcome Back</h1>
               <p className="mb-8 text-gray-400">Sign in to your account to continue</p>
 
+              {/* Error Message */}
+              {error && (
+                <div className="mb-6 rounded-lg border border-red-500/30 bg-red-950/20 p-3 text-sm text-red-400">
+                  {error}
+                </div>
+              )}
+
               {/* Login Form */}
               <form className="space-y-6" onSubmit={handleSubmit}>
                 {/* Email Input */}
                 <div>
-                  <label htmlFor="email" className="mb-2 block text-sm font-medium text-white/80">
+                  <label
+                    htmlFor="email"
+                    className="mb-2 block text-sm font-medium text-white/80"
+                  >
                     Email
                   </label>
                   <input
@@ -57,7 +101,8 @@ export default function LoginPage() {
                     id="email"
                     name="email"
                     required
-                    className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-white placeholder-gray-500 backdrop-blur-sm transition-colors focus:border-white/40 focus:bg-white/10 focus:outline-none"
+                    disabled={isLoading}
+                    className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-white placeholder-gray-500 backdrop-blur-sm transition-colors focus:border-white/40 focus:bg-white/10 focus:outline-none disabled:opacity-50"
                     placeholder="Enter your email"
                     value={credential.email}
                     onChange={handleChange}
@@ -66,7 +111,10 @@ export default function LoginPage() {
 
                 {/* Password Input */}
                 <div>
-                  <label htmlFor="password" className="mb-2 block text-sm font-medium text-white/80">
+                  <label
+                    htmlFor="password"
+                    className="mb-2 block text-sm font-medium text-white/80"
+                  >
                     Password
                   </label>
                   <input
@@ -74,7 +122,8 @@ export default function LoginPage() {
                     id="password"
                     name="password"
                     required
-                    className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-white placeholder-gray-500 backdrop-blur-sm transition-colors focus:border-white/40 focus:bg-white/10 focus:outline-none"
+                    disabled={isLoading}
+                    className="w-full rounded-lg border border-white/20 bg-white/5 px-4 py-3 text-white placeholder-gray-500 backdrop-blur-sm transition-colors focus:border-white/40 focus:bg-white/10 focus:outline-none disabled:opacity-50"
                     placeholder="Enter your password"
                     value={credential.password}
                     onChange={handleChange}
@@ -94,9 +143,10 @@ export default function LoginPage() {
                 {/* Login Button */}
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-blue-600 px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700"
+                  disabled={isLoading}
+                  className="w-full rounded-lg bg-blue-600 px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Login
+                  {isLoading ? "Logging in..." : "Login"}
                 </button>
 
                 {/* Divider */}
@@ -145,7 +195,7 @@ export default function LoginPage() {
 
               {/* Sign Up Link */}
               <p className="mt-6 text-center text-sm text-gray-400">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link href="/registration" className="text-blue-400 transition-colors hover:text-blue-300">
                   Sign up
                 </Link>

@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useAuth } from "@/app/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 interface NavLink {
   label: string;
@@ -21,6 +23,9 @@ const NAV_LINKS: NavLink[] = [
 
 export default function Navbar({ className = "" }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
+  const router = useRouter();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -84,18 +89,76 @@ export default function Navbar({ className = "" }: NavbarProps) {
 
         {/* Action Buttons (Desktop Only) */}
         <div className="hidden items-center gap-4 md:flex">
-          <Link
-            href="/login"
-            className="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
-          >
-            Login
-          </Link>
-          <Link
-            href="/registration"
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
-          >
-            Registration
-          </Link>
+          {isAuthenticated && user ? (
+            <div className="relative">
+              <button
+                onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                className="flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+              >
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600">
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+                <span>{user.name.split(" ")[0]}</span>
+              </button>
+
+              {/* Profile Dropdown */}
+              {isProfileMenuOpen && (
+                <div className="absolute right-0 top-full mt-2 w-48 rounded-lg border border-white/10 bg-black/95 backdrop-blur-xl shadow-xl">
+                  <div className="border-b border-white/10 p-4">
+                    <p className="text-sm font-medium text-white">{user.name}</p>
+                    <p className="text-xs text-gray-400">{user.email}</p>
+                  </div>
+                  <div className="space-y-1 p-2">
+                    <Link
+                      href={
+                        user.role === "freelancer"
+                          ? "/freelancer-dashboard"
+                          : "/client-dashboard"
+                      }
+                      onClick={() => setIsProfileMenuOpen(false)}
+                      className="flex items-center gap-2 rounded px-3 py-2 text-sm text-gray-300 hover:bg-white/10 hover:text-white"
+                    >
+                      📊 Dashboard
+                    </Link>
+                    <Link
+                      href="/profile"
+                      onClick={() => setIsProfileMenuOpen(false)}
+                      className="flex items-center gap-2 rounded px-3 py-2 text-sm text-gray-300 hover:bg-white/10 hover:text-white"
+                    >
+                      👤 Profile
+                    </Link>
+                  </div>
+                  <div className="border-t border-white/10 p-2">
+                    <button
+                      onClick={() => {
+                        logout();
+                        setIsProfileMenuOpen(false);
+                        router.push("/");
+                      }}
+                      className="w-full rounded px-3 py-2 text-left text-sm text-red-400 hover:bg-red-950/20"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+              >
+                Login
+              </Link>
+              <Link
+                href="/registration"
+                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+              >
+                Registration
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Spacer for mobile to balance hamburger menu */}
@@ -126,21 +189,56 @@ export default function Navbar({ className = "" }: NavbarProps) {
           </div>
 
           {/* Mobile Action Buttons */}
-          <div className="mt-6 flex flex-col gap-3">
-            <Link
-              href="/login"
-              onClick={closeMobileMenu}
-              className="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-center text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
-            >
-              Login
-            </Link>
-            <Link
-              href="/registration"
-              onClick={closeMobileMenu}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-center text-sm font-medium text-white transition-colors hover:bg-blue-700"
-            >
-              Registration
-            </Link>
+          <div className="mt-6 flex flex-col gap-3 border-t border-white/10 pt-6">
+            {isAuthenticated && user ? (
+              <>
+                <Link
+                  href={
+                    user.role === "freelancer"
+                      ? "/freelancer-dashboard"
+                      : "/client-dashboard"
+                  }
+                  onClick={closeMobileMenu}
+                  className="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-center text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  href="/profile"
+                  onClick={closeMobileMenu}
+                  className="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-center text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+                >
+                  Profile
+                </Link>
+                <button
+                  onClick={() => {
+                    logout();
+                    closeMobileMenu();
+                    router.push("/");
+                  }}
+                  className="rounded-lg border border-red-500/30 bg-red-950/20 px-4 py-2 text-center text-sm font-medium text-red-400 transition-colors hover:bg-red-950/40"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  onClick={closeMobileMenu}
+                  className="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-center text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/registration"
+                  onClick={closeMobileMenu}
+                  className="rounded-lg bg-blue-600 px-4 py-2 text-center text-sm font-medium text-white transition-colors hover:bg-blue-700"
+                >
+                  Registration
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
