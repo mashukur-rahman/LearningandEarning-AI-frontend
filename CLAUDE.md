@@ -23,13 +23,38 @@ app/
 ├── page.tsx             # Home page with Navbar and HeroSection
 ├── globals.css          # Global styles imported in layout
 ├── HeroSection.tsx      # Hero section component for home page
+├── context/
+│   └── AuthContext.tsx  # Authentication state management with React Context
 ├── login/
 │   └── page.tsx         # Login form page with email/password and Google OAuth
-└── registration/
-    └── page.tsx         # Registration form with buyer/seller role selection
+├── registration/
+│   └── page.tsx         # Registration form with buyer/seller role selection
+├── client-dashboard/
+│   └── page.tsx         # Client dashboard with stats, job management
+├── freelancer-dashboard/
+│   └── page.tsx         # Freelancer dashboard with stats, jobs, courses
+└── messages/
+    └── page.tsx         # Inbox page with conversation list and chat view
 
 components/
-└── Navbar.tsx           # Responsive navigation with mobile hamburger menu
+├── Navbar.tsx           # Responsive navigation with mobile hamburger menu
+├── dashboard/
+│   ├── DashboardSidebar.tsx   # Role-adaptive sidebar navigation
+│   ├── ClientStats.tsx        # Client statistics cards
+│   ├── FreelancerStats.tsx    # Freelancer statistics cards
+│   ├── ActiveJobs.tsx         # Active jobs list (adaptive for both roles)
+│   ├── Messages.tsx           # Messages preview component
+│   ├── Courses.tsx            # Course progress tracker
+│   └── PostJobSection.tsx     # Post job CTA section
+└── messages/
+    ├── ConversationList.tsx   # Conversation list panel with search
+    └── ChatView.tsx           # Chat message thread view
+
+data/
+└── messages/
+    ├── mockConversationsFreelancer.ts  # Mock conversations for freelancers (with clients)
+    ├── mockConversationsClient.ts      # Mock conversations for clients (with freelancers)
+    └── autoReplies.ts                  # Array of 40 auto-reply messages for conversation simulation
 ```
 
 ## Development Commands
@@ -87,6 +112,40 @@ The `Navbar` component (`components/Navbar.tsx`) provides:
 - **Responsive Design**: Uses `hidden md:flex` and `md:hidden` to switch layouts
 - **Props**: Accepts optional `className` prop for customization
 
+### Messages/Inbox System
+
+The `/messages` page provides a full-featured inbox for communication between clients and freelancers:
+
+**Page Structure** (`app/messages/page.tsx`):
+- Protected route requiring authentication
+- Two-panel layout: conversation list (left) + chat view (right)
+- Responsive: Stacks on mobile with back/forward navigation
+- **Role-based conversations**: 
+  - Freelancers see conversations with clients (from `mockConversationsFreelancer.ts`)
+  - Clients see conversations with freelancers (from `mockConversationsClient.ts`)
+- Uses separate mock data files based on user role
+
+**Components**:
+- **ConversationList** (`components/messages/ConversationList.tsx`):
+  - Shows all conversations with avatars and preview text
+  - Search functionality to filter conversations
+  - Unread message indicators and count badges
+  - Color-coded avatars (purple for clients, blue for freelancers)
+  - "New Message" button at bottom
+  
+- **ChatView** (`components/messages/ChatView.tsx`):
+  - Full chat interface with message bubbles
+  - Sender/receiver distinction (blue bubbles for own messages)
+  - Message timestamps
+  - Text input with send button
+  - Attachment button (UI only)
+  - Video call button (UI only)
+  - Auto-scrolls to latest message
+  - Press Enter to send
+  - **Auto-reply simulation**: When you send a message, the other person automatically replies after 1.5 seconds with a message from a predefined array
+  - **Typing indicator**: Shows animated dots while the other person is "typing"
+  - Sequential replies: Each message you send gets the next reply from the array (loops back to start after 40 replies)
+
 ## Type Definitions & Path Aliases
 
 - **Path Alias**: `@/*` points to the root directory for clean imports
@@ -110,9 +169,11 @@ The `Navbar` component (`components/Navbar.tsx`) provides:
 
 ### Known Areas Requiring Backend Integration
 
-- Login form submission (currently logs to console)
+- Login form submission (uses mock users database)
 - Registration form submission (currently logs to console)
 - Google OAuth integration (UI placeholder only)
+- Messages/inbox system (uses static mock data for conversations and messages)
+- Sending messages (currently adds to local state, not persisted)
 
 ### Code Quality
 
