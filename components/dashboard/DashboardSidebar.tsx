@@ -26,7 +26,7 @@ export default function DashboardSidebar({
 
   const freelancerLinks: NavItem[] = [
     { label: "Dashboard", href: "/freelancer-dashboard", icon: "📊" },
-    { label: "Browse Jobs", href: "/jobs", icon: "💼" },
+    { label: "Browse Jobs", href: "/browse-jobs", icon: "💼" },
     { label: "My Jobs", href: "/my-jobs", icon: "📋" },
     { label: "Messages", href: "/messages", icon: "💬" },
     { label: "Courses", href: "/courses", icon: "📚" },
@@ -35,7 +35,7 @@ export default function DashboardSidebar({
 
   const clientLinks: NavItem[] = [
     { label: "Dashboard", href: "/client-dashboard", icon: "📊" },
-    { label: "Post a Job", href: "/post-job", icon: "✏️" },
+    { label: "Post a Job", href: "/post-jobs", icon: "✏️" },
     { label: "My Jobs", href: "/my-posted-jobs", icon: "📋" },
     { label: "Messages", href: "/messages", icon: "💬" },
     { label: "Payments", href: "/payments", icon: "💳" },
