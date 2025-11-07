@@ -30,6 +30,7 @@ export default function DashboardSidebar({
     { label: "My Jobs", href: "/my-jobs", icon: "📋" },
     { label: "Messages", href: "/messages", icon: "💬" },
     { label: "Courses", href: "/courses", icon: "📚" },
+    { label: "Certifications", href: "/certification", icon: "🏆" },
     { label: "Profile", href: "/profile", icon: "👤" },
   ];
 
