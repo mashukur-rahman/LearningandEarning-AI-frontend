@@ -2,6 +2,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import { autoReplies } from "@/data/messages/autoReplies";
+import { moderateContent } from "@/utils/contentModeration";
+import ModerationWarningModal from "./ModerationWarningModal";
+import "./scrollbar.css";
 
 interface Message {
   id: string;
@@ -40,6 +43,9 @@ export default function ChatView({
   const [localMessages, setLocalMessages] = useState(messages);
   const [replyIndex, setReplyIndex] = useState(0);
   const [isOtherPersonTyping, setIsOtherPersonTyping] = useState(false);
+  const [showModerationModal, setShowModerationModal] = useState(false);
+  const [moderationReasons, setModerationReasons] = useState<string[]>([]);
+  const [moderationPatterns, setModerationPatterns] = useState<string[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -57,6 +63,17 @@ export default function ChatView({
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
+
+    // Content moderation check
+    const moderationResult = moderateContent(newMessage);
+    
+    if (moderationResult.isBlocked) {
+      // Show warning modal
+      setModerationReasons(moderationResult.reasons);
+      setModerationPatterns(moderationResult.detectedPatterns);
+      setShowModerationModal(true);
+      return;
+    }
 
     const newMsg: Message = {
       id: `m${Date.now()}`,
@@ -94,7 +111,7 @@ export default function ChatView({
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
       {/* Header */}
-      <div className="border-b border-white/10 bg-black/30 p-4">
+      <div className="flex-shrink-0 border-b border-white/10 bg-black/30 p-4">
         <div className="flex items-center gap-3">
           {/* Back Button (Mobile) */}
           {showBackButton && (
@@ -182,7 +199,7 @@ export default function ChatView({
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="custom-scrollbar flex-1 overflow-y-auto p-4 space-y-4" style={{ minHeight: 0 }}>
         {localMessages.length === 0 ? (
           <div className="flex h-full items-center justify-center">
             <div className="text-center">
@@ -286,7 +303,7 @@ export default function ChatView({
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-white/10 bg-black/30 p-4">
+      <div className="flex-shrink-0 border-t border-white/10 bg-black/30 p-4">
         <form onSubmit={handleSendMessage} className="flex items-center gap-3">
           {/* Attachment Button */}
           <button
@@ -352,6 +369,14 @@ export default function ChatView({
           Press Enter to send
         </p>
       </div>
+
+      {/* Moderation Warning Modal */}
+      <ModerationWarningModal
+        isOpen={showModerationModal}
+        onClose={() => setShowModerationModal(false)}
+        reasons={moderationReasons}
+        detectedPatterns={moderationPatterns}
+      />
     </div>
   );
 }
