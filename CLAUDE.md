@@ -18,6 +18,7 @@ This is a Next.js 16 frontend application called "Learning & Earning AI" - a com
 ## Project Structure
 
 ```
+```
 app/
 ├── layout.tsx                      # Root layout with metadata, AuthProvider, global styles
 ├── page.tsx                        # Home page with Navbar and HeroSection
@@ -31,8 +32,28 @@ app/
 │   └── page.tsx                    # Registration form with buyer/seller role selection
 ├── client-dashboard/
 │   └── page.tsx                    # Client dashboard with stats, job management, messages
+├── my-posted-jobs/
+│   └── page.tsx                    # Client posted jobs with filtering and management
+├── client-job-details/
+│   └── [id]/
+│       └── page.tsx                # Client job details with applicant management
 ├── freelancer-dashboard/
 │   └── page.tsx                    # Freelancer dashboard with stats, jobs, courses, messages
+├── my-jobs/
+│   └── page.tsx                    # Freelancer jobs dashboard with filtering and statistics
+├── job-details/
+│   └── [id]/
+│       └── page.tsx                # Freelancer job detail page with full information
+├── courses/
+│   ├── page.tsx                    # Courses listing with category filtering (7 mock courses)
+│   └── [id]/
+│       ├── page.tsx                # Course detail page with video player
+│       └── test/
+├── my-jobs/
+│   └── page.tsx                    # My Jobs dashboard with filtering and statistics
+├── job-details/
+│   └── [id]/
+│       └── page.tsx                # Job detail page with full information
 ├── courses/
 │   ├── page.tsx                    # Courses listing with category filtering (7 mock courses)
 │   └── [id]/
@@ -71,6 +92,8 @@ data/
 │   └── autoReplies.ts                  # Array of 40 auto-reply messages (44 lines)
 └── jobs/
     ├── mockJobs.ts                     # 12 mock freelancer job listings with timers
+    ├── mockFreelancerJobs.ts           # Complete job data for freelancers (11 jobs with details)
+    ├── mockClientJobs.ts               # Complete job data for clients (9 jobs with applicants)
     ├── mcqQuestions.ts                 # 10 web development MCQ questions
     ├── sotaProjects.ts                 # 12 SOTA project examples
     ├── mockCandidates.ts               # 30 mock candidate profiles with ratings and expertise
@@ -474,6 +497,9 @@ Update these in `app/layout.tsx` to reflect the actual product name and descript
   - Browse Jobs system with real-time countdown timers
   - Job application with technical MCQ assessment
   - Project submission with job requirements
+  - **My Jobs Management**: View, filter, and manage all assigned jobs
+  - Job details page with complete information and progress tracking
+  - 11 mock freelancer jobs (3 active, 6 completed, 2 pending)
 ✅ **Client Side**:
   - Post Jobs system with expertise-based budgeting
   - Job creation modal with form validation
@@ -486,6 +512,7 @@ Update these in `app/layout.tsx` to reflect the actual product name and descript
 ✅ Responsive design (mobile, tablet, desktop)
 ✅ Glass morphism UI theme
 ✅ Navigation with role-adaptive sidebar
+✅ Enhanced freelancer statistics (active jobs, earnings, ratings)
 
 ### Currently Mock/Placeholder
 - Backend API integration (all data is mock/local)
@@ -495,3 +522,352 @@ Update these in `app/layout.tsx` to reflect the actual product name and descript
 - Video/file storage
 - Test grading system
 - Profile management
+
+## Freelancer Jobs Management System
+
+### Overview
+The freelancer jobs management system allows freelancers to view and track all their assigned jobs, including active, pending, and completed projects with comprehensive details, progress tracking, and client feedback.
+
+### Routes & Pages
+
+**1. `/my-jobs` - My Jobs Dashboard**
+- **Purpose**: Central hub for viewing all freelancer jobs
+- **Access**: Freelancer role only
+- **Features**:
+  - Filter jobs by status: All, Active, Pending, Completed
+  - Statistics cards showing total jobs, active count, completed count, pending count
+  - Job cards displaying:
+    - Job title, client name, status badge (color-coded)
+    - Budget (৳), deadline, days left
+    - Progress bar (for active jobs)
+    - Required skills tags
+    - Description preview (line-clamped)
+    - Client feedback with rating (for completed jobs)
+  - Responsive grid layout (1 col mobile, 2 cols tablet, 3 cols desktop)
+  - "Details" button links to individual job page
+- **Theme**: Maintains glass morphism design with dark background
+
+**2. `/job-details/[id]` - Job Details Page**
+- **Purpose**: Detailed view of a specific job with full information
+- **Access**: Freelancer role only
+- **Features**:
+  - Full job title and client information
+  - Current status badge
+  - Key metrics: Budget, Deadline, Days Left, Hourly Rate
+  - Complete job description
+  - Required skills with visual badges
+  - Progress bar showing completion percentage (active jobs only)
+  - Client feedback and rating display (completed jobs)
+  - Action buttons (Back to Jobs, Update Progress)
+  - Loading state and 404 handling
+- **Theme**: Large card layout with gradient accents and smooth transitions
+
+### Data Structure
+
+**File**: `data/jobs/mockFreelancerJobs.ts`
+
+**FreelancerJob Interface**:
+```typescript
+{
+  id: string;                              // Unique job identifier
+  title: string;                           // Job title
+  client: string;                          // Client company name
+  clientAvatar: string;                    // Client initials for avatar
+  deadline: string;                        // YYYY-MM-DD format
+  status: "in_progress" | "completed" | "pending";
+  progress: number;                        // 0-100 percentage
+  budget: number;                          // Amount in BDT
+  currencyCode: string;                    // "BDT"
+  description: string;                     // Full job description
+  skills: string[];                        // Required skills array
+  hourlyRate?: number;                     // Optional hourly rate in BDT
+  daysLeft?: number;                       // Days remaining
+  rating?: number;                         // Client rating (0-5)
+  completedDate?: string;                  // Completion date (YYYY-MM-DD)
+  feedback?: string;                       // Client feedback text
+}
+```
+
+**Mock Data Categories**:
+
+1. **Active Jobs** (`mockActiveFreelancerJobs`) - 3 jobs
+   - React Dashboard Development (65% progress)
+   - Mobile App UI Design Implementation (40% progress)
+   - Next.js E-commerce API Integration (50% progress)
+
+2. **Completed Jobs** (`mockCompletedFreelancerJobs`) - 6 jobs
+   - E-commerce Website Development
+   - REST API Development
+   - Database Optimization & Migration
+   - TypeScript Migration Project
+   - Mobile App Development
+   - UI Component Library Development
+
+3. **Pending Jobs** (`mockPendingFreelancerJobs`) - 2 jobs
+   - GraphQL API Implementation
+   - Machine Learning Model Integration
+
+**Helper Functions**:
+- `getActiveFreelancerJobs()` - Returns all active jobs
+- `getCompletedFreelancerJobs()` - Returns completed jobs
+- `getPendingFreelancerJobs()` - Returns pending jobs
+- `getAllFreelancerJobs()` - Returns all jobs combined
+- `getFreelancerJobById(jobId)` - Returns specific job or undefined
+- `getFreelancerJobStats()` - Returns statistics object with:
+  - `activeJobs` - count
+  - `completedJobs` - count
+  - `pendingJobs` - count
+  - `totalEarnings` - sum of all job budgets
+  - `averageRating` - average rating of completed jobs
+
+### Integration with Dashboard
+
+**Freelancer Dashboard** (`/freelancer-dashboard`):
+- Now uses real mock data instead of hardcoded values
+- Displays top 3 active jobs in "Active Jobs" section
+- Shows up to 6 completed jobs in expandable "Past Jobs" section
+- Stats section enhanced with:
+  - Level badge
+  - Jobs Completed count
+  - Active Jobs count (new)
+  - Total Earnings in lakhs (new)
+  - Average Rating (new)
+- "View All" link directs to `/my-jobs` page
+- Stats grid responsive: 2 cols on mobile → 3 cols tablet → 5 cols desktop
+
+### Styling & Theme Consistency
+
+All components maintain the glass morphism aesthetic:
+- **Dark background**: `bg-black` or `bg-white/5`
+- **Borders**: `border-white/10` with hover state `border-white/20`
+- **Cards**: `rounded-xl` with `backdrop-blur-md`
+- **Status badges**: Color-coded:
+  - In Progress: Blue (`bg-blue-500/20 text-blue-300`)
+  - Completed: Green (`bg-green-500/20 text-green-300`)
+  - Pending: Yellow (`bg-yellow-500/20 text-yellow-300`)
+- **Skill tags**: Blue themed with slight opacity
+- **Progress bars**: Gradient from blue-500 to blue-600
+- **Hover effects**: Subtle background color increase and border brightening
+
+### User Flow
+
+**Freelancer Job Management Journey**:
+1. Freelancer logs in and views `/freelancer-dashboard`
+2. Sees active jobs and career statistics
+3. Clicks "View All" or "My Jobs" in sidebar to visit `/my-jobs`
+4. Filters jobs by status (All, Active, Pending, Completed)
+5. Clicks "Details" on any job to view full details at `/job-details/[id]`
+6. Views job requirements, progress, and client feedback
+7. Returns to jobs list to manage other projects
+
+### Future Enhancements
+
+- Real-time job status updates from backend
+- Progress update submission interface
+- Client communication integration
+- Time tracking for hourly-rate jobs
+- Invoice and payment history
+- Job analytics and earnings reports
+- Job completion workflows
+- Contract management
+
+## Client Jobs Management System
+
+### Overview
+The client jobs management system allows clients to post jobs, track applicants, manage ongoing projects, and view completed jobs with comprehensive applicant information and project tracking.
+
+### Routes & Pages
+
+**1. `/my-posted-jobs` - My Posted Jobs Dashboard**
+- **Purpose**: Central hub for viewing and managing all client job postings
+- **Access**: Client role only
+- **Features**:
+  - Filter jobs by status: All, Ongoing, Open, Completed
+  - Statistics cards showing total posted, ongoing, open, and completed counts
+  - Job cards displaying:
+    - Job title, status badge (color-coded), expertise level
+    - Budget (৳) and applicant count
+    - Deadline information
+    - Selected freelancer info (for ongoing/completed jobs)
+    - Progress bar (for ongoing jobs)
+    - Client feedback with rating (for completed jobs)
+  - Responsive grid layout (1 col mobile, 2 cols tablet, 3 cols desktop)
+  - "Manage" button links to individual job management page
+- **Theme**: Maintains glass morphism design with dark background
+
+**2. `/client-job-details/[id]` - Job Management & Applicants**
+- **Purpose**: Detailed view and management of a specific job posting
+- **Access**: Client role only
+- **Features**:
+  - Full job title, status, and creation date
+  - Key metrics: Budget, Budget Range, Total Applicants, Deadline, Expertise Level
+  - Complete job description and requirements side-by-side
+  - Progress bar showing project completion (ongoing jobs)
+  - Client feedback and rating display (completed jobs)
+  - **Applicants Management Section**:
+    - Filter applicants by status: All, Shortlisted, Hired
+    - Applicant cards with:
+      - Avatar with initials
+      - Name and status badge (color-coded: hired/shortlisted/applied/rejected)
+      - Expertise level badge
+      - Bio/description
+      - Rating, completed projects count, hourly rate
+      - "Review" or "View Profile" button
+    - Dynamic count indicators on filter tabs
+  - Action buttons: Back to Jobs, Close Job (if open), Mark as Completed (if in progress)
+  - Loading state and 404 handling
+- **Theme**: Large card layout with gradient accents and smooth transitions
+
+### Data Structure
+
+**File**: `data/jobs/mockClientJobs.ts`
+
+**JobApplicant Interface**:
+```typescript
+{
+  id: string;                                          // Unique applicant identifier
+  name: string;                                        // Applicant name
+  avatar: string;                                      // Initials for avatar
+  expertise: "beginner" | "intermediate" | "expert";  // Expertise level
+  rating: number;                                      // Star rating (0-5)
+  completedProjects: number;                          // Total projects completed
+  hourlyRate: number;                                 // Rate in BDT
+  bio: string;                                        // Professional bio
+  status: "applied" | "shortlisted" | "rejected" | "hired" | "in_progress";
+}
+```
+
+**ClientJobPosting Interface**:
+```typescript
+{
+  id: string;                                          // Unique job identifier
+  title: string;                                       // Job title
+  description: string;                                // Full job description
+  requirements: string;                               // Job requirements
+  expertiseLevel: "beginner" | "intermediate" | "expert";
+  budget: number;                                      // Posted budget in BDT
+  budgetRange: { min: number; max: number };          // Budget range
+  currencyCode: string;                               // "BDT"
+  createdDate: string;                                // YYYY-MM-DD format
+  deadline?: string;                                  // Project deadline
+  status: "open" | "in_progress" | "completed" | "closed";
+  totalApplicants: number;                            // Number of applicants
+  applicants: JobApplicant[];                         // Full applicant list
+  selectedFreelancer?: JobApplicant;                  // Hired freelancer info
+  progress?: number;                                  // 0-100 for ongoing jobs
+  completionDate?: string;                            // YYYY-MM-DD when completed
+  feedback?: string;                                  // Client feedback text
+  rating?: number;                                    // Client rating (0-5)
+}
+```
+
+**Mock Data Categories**:
+
+1. **Ongoing Jobs** (`mockOngoingClientJobs`) - 3 jobs
+   - React Dashboard Development (65% progress, 8 applicants)
+   - E-commerce Mobile App Development (45% progress, 12 applicants)
+   - GraphQL API Backend Development (75% progress, 6 applicants)
+
+2. **Completed Jobs** (`mockCompletedClientJobs`) - 4 jobs
+   - Landing Page Design & Development (5⭐ rating)
+   - Database Schema Design & Optimization (4.9⭐ rating)
+   - API Documentation & Postman Collection (4.8⭐ rating)
+   - UI/UX Design System Implementation (5⭐ rating)
+
+3. **Open Jobs** (`mockOpenClientJobs`) - 2 jobs
+   - PWA Development with Offline Support (4 applicants)
+   - Cloud Infrastructure Setup & DevOps (5 applicants)
+
+**Helper Functions**:
+- `getOngoingClientJobs()` - Returns all ongoing jobs
+- `getCompletedClientJobs()` - Returns completed jobs
+- `getOpenClientJobs()` - Returns open/available jobs
+- `getAllClientJobs()` - Returns all jobs combined
+- `getClientJobById(jobId)` - Returns specific job or undefined
+- `getJobApplicants(jobId)` - Returns all applicants for a job
+- `getClientJobStats()` - Returns statistics object with:
+  - `ongoingJobs` - count
+  - `completedJobs` - count
+  - `openJobs` - count
+  - `totalJobs` - total count
+  - `totalSpent` - sum of all job budgets
+  - `averageRating` - average rating of completed jobs
+  - `totalApplicants` - total applicants across all jobs
+- `getJobApplicantCount(jobId)` - Returns applicant count for a job
+- `getApplicantsByStatus(jobId, status)` - Returns filtered applicants
+
+### Integration with Client Dashboard
+
+**Client Dashboard** (`/client-dashboard`):
+- Now uses real mock data instead of hardcoded values
+- Displays top 3 ongoing jobs in "Active Jobs" section
+- Shows up to 4 completed jobs in expandable "Past Jobs" section (if data expanded)
+- Stats section enhanced with:
+  - Total Jobs Posted count
+  - Active Jobs count
+  - Total Spent (in lakhs)
+  - Completed Jobs count (new)
+  - Total Applicants count (new)
+  - Average Rating (new)
+- "View All" link directs to `/my-posted-jobs` page
+- Stats grid responsive: 2 cols on mobile → 2 cols tablet → 3 cols desktop → 6 cols XL
+
+### Applicant Status Management
+
+**Status Types**:
+- **Applied**: Initial status when freelancer applies
+- **Shortlisted**: Client has marked as potential candidate
+- **Hired**: Selected freelancer for the job
+- **In Progress**: Freelancer is actively working (for hired freelancers)
+- **Rejected**: Client declined applicant
+
+**Status Badge Colors**:
+- Hired: Green (`bg-green-500/20 text-green-300`)
+- Shortlisted: Blue (`bg-blue-500/20 text-blue-300`)
+- Applied: Gray (`bg-gray-500/20 text-gray-300`)
+- Rejected: Red (`bg-red-500/20 text-red-300`)
+
+### Styling & Theme Consistency
+
+All components maintain the glass morphism aesthetic:
+- **Dark background**: `bg-black` or `bg-white/5`
+- **Borders**: `border-white/10` with hover state `border-white/20`
+- **Cards**: `rounded-xl` with `backdrop-blur-md`
+- **Status badges**: Color-coded:
+  - Ongoing: Blue (`bg-blue-500/20 text-blue-300`)
+  - Open: Yellow (`bg-yellow-500/20 text-yellow-300`)
+  - Completed: Green (`bg-green-500/20 text-green-300`)
+- **Expertise badges**: 
+  - Beginner: Green
+  - Intermediate: Yellow
+  - Expert: Purple
+- **Progress bars**: Gradient from blue-500 to blue-600
+- **Hover effects**: Subtle background color increase and border brightening
+
+### User Flow
+
+**Client Job Management Journey**:
+1. Client logs in and views `/client-dashboard`
+2. Sees ongoing jobs and business statistics
+3. Clicks "View All" or "My Posted Jobs" in sidebar to visit `/my-posted-jobs`
+4. Filters jobs by status (All, Ongoing, Open, Completed)
+5. Clicks "Manage" on any job to view details and applicants at `/client-job-details/[id]`
+6. Reviews applicants, checks their ratings and projects
+7. Filters applicants by status (All, Shortlisted, Hired)
+8. Views project progress and client feedback for completed jobs
+9. Returns to jobs list to manage other postings
+
+### Future Enhancements
+
+- Real-time applicant notifications
+- Applicant search and filtering by expertise
+- Bulk action operations on applicants
+- Messaging with applicants integrated
+- Job closing workflows
+- Project completion/approval interface
+- Invoice and payment tracking
+- Review and rating system for freelancers
+- Job reposting after completion
+- Analytics dashboard with job performance metrics
+```
+```

@@ -9,53 +9,15 @@ import ActiveJobs from "@/components/dashboard/ActiveJobs";
 import Messages from "@/components/dashboard/Messages";
 import Courses from "@/components/dashboard/Courses";
 import Link from "next/link";
+import {
+  getActiveFreelancerJobs,
+  getCompletedFreelancerJobs,
+  getFreelancerJobStats,
+} from "@/data/jobs/mockFreelancerJobs";
 
 // Mock data
-const mockActiveJobs = [
-  {
-    id: "1",
-    title: "React Dashboard Development",
-    client: "Tech Startup Inc",
-    deadline: "2024-12-20",
-    status: "in_progress",
-    progress: 65,
-  },
-  {
-    id: "2",
-    title: "Mobile App UI Design",
-    client: "Creative Agency Co",
-    deadline: "2024-12-10",
-    status: "in_progress",
-    progress: 40,
-  },
-];
-
-const mockPastJobs = [
-  {
-    id: "3",
-    title: "E-commerce Website",
-    client: "Online Store Ltd",
-    deadline: "2024-11-15",
-    status: "completed",
-    progress: 100,
-  },
-  {
-    id: "4",
-    title: "API Integration",
-    client: "Software Co",
-    deadline: "2024-11-10",
-    status: "completed",
-    progress: 100,
-  },
-  {
-    id: "5",
-    title: "Database Optimization",
-    client: "Data Systems",
-    deadline: "2024-11-05",
-    status: "completed",
-    progress: 100,
-  },
-];
+const mockActiveJobs = getActiveFreelancerJobs();
+const mockPastJobs = getCompletedFreelancerJobs();
 
 const mockMessages = [
   {
@@ -166,7 +128,18 @@ export default function FreelancerDashboard() {
         <div className="p-4 sm:p-6 lg:p-8">
           {/* Stats */}
           <section className="mb-8">
-            <FreelancerStats jobsCompleted={12} level="Pro" />
+            {(() => {
+              const stats = getFreelancerJobStats();
+              return (
+                <FreelancerStats
+                  jobsCompleted={stats.completedJobs}
+                  level="Pro"
+                  activeJobs={stats.activeJobs}
+                  totalEarnings={stats.totalEarnings}
+                  averageRating={parseFloat(stats.averageRating as string)}
+                />
+              );
+            })()}
           </section>
 
           {/* Active Jobs Section */}

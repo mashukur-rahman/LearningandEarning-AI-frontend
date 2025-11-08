@@ -9,53 +9,30 @@ import ActiveJobs from "@/components/dashboard/ActiveJobs";
 import Messages from "@/components/dashboard/Messages";
 import PostJobSection from "@/components/dashboard/PostJobSection";
 import Link from "next/link";
+import {
+  getOngoingClientJobs,
+  getCompletedClientJobs,
+  getClientJobStats,
+} from "@/data/jobs/mockClientJobs";
 
 // Mock data
-const mockActiveJobs = [
-  {
-    id: "1",
-    title: "Full Stack Developer needed for SaaS",
-    client: "Your Company",
-    deadline: "2024-12-20",
-    status: "active",
-    progress: 0,
-  },
-  {
-    id: "2",
-    title: "UI/UX Designer for Mobile App",
-    client: "Your Company",
-    deadline: "2024-12-15",
-    status: "active",
-    progress: 0,
-  },
-];
+const mockActiveJobs = getOngoingClientJobs().map((job) => ({
+  id: job.id,
+  title: job.title,
+  client: "Your Company",
+  deadline: job.deadline || "2024-12-20",
+  status: "active" as const,
+  progress: job.progress || 0,
+}));
 
-const mockPastJobs = [
-  {
-    id: "3",
-    title: "E-commerce Platform Development",
-    client: "Your Company",
-    deadline: "2024-11-20",
-    status: "completed",
-    progress: 100,
-  },
-  {
-    id: "4",
-    title: "Marketing Website Redesign",
-    client: "Your Company",
-    deadline: "2024-11-15",
-    status: "completed",
-    progress: 100,
-  },
-  {
-    id: "5",
-    title: "API Integration Project",
-    client: "Your Company",
-    deadline: "2024-11-10",
-    status: "completed",
-    progress: 100,
-  },
-];
+const mockPastJobs = getCompletedClientJobs().map((job) => ({
+  id: job.id,
+  title: job.title,
+  client: "Your Company",
+  deadline: job.completionDate || "2024-11-20",
+  status: "completed" as const,
+  progress: 100,
+}));
 
 const mockMessages = [
   {
@@ -149,11 +126,19 @@ export default function ClientDashboard() {
         <div className="p-4 sm:p-6 lg:p-8">
           {/* Stats */}
           <section className="mb-8">
-            <ClientStats
-              jobsPosted={8}
-              activeJobs={mockActiveJobs.length}
-              totalSpend="$12,450"
-            />
+            {(() => {
+              const stats = getClientJobStats();
+              return (
+                <ClientStats
+                  jobsPosted={stats.totalJobs}
+                  activeJobs={stats.ongoingJobs}
+                  totalSpend={`৳${(stats.totalSpent / 100000).toFixed(1)}L`}
+                  completedJobs={stats.completedJobs}
+                  totalApplicants={stats.totalApplicants}
+                  averageRating={parseFloat(stats.averageRating as string)}
+                />
+              );
+            })()}
           </section>
 
           {/* Post Job Section */}
