@@ -95,12 +95,53 @@ export default function JobModal({
       <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl border border-white/10 bg-black/90 backdrop-blur-xl">
         {/* Header */}
         <div className="sticky top-0 bg-black/80 border-b border-white/10 p-6 backdrop-blur-xl">
+          <style>{`
+            .test-info-tooltip {
+              opacity: 0;
+              visibility: hidden;
+              position: absolute;
+              top: 100%;
+              left: 50%;
+              transform: translateX(-50%);
+              width: 300px;
+              margin-top: 8px;
+              background: linear-gradient(135deg, rgb(99, 102, 241) 0%, rgb(139, 92, 246) 100%);
+              border: 2px solid rgb(139, 92, 246);
+              border-radius: 12px;
+              padding: 14px;
+              z-index: 60;
+              transition: opacity 0.3s, visibility 0.3s;
+              white-space: normal;
+            }
+            .test-info-icon:hover .test-info-tooltip {
+              opacity: 1;
+              visibility: visible;
+            }
+          `}</style>
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-1">
+            <div className="flex-1">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 via-blue-400 to-emerald-400 bg-clip-text text-transparent mb-2">
                 {job.title}
               </h2>
-              <p className="text-sm text-white/60">{job.company}</p>
+              <div className="flex items-center gap-3">
+                <p className="text-sm text-white/60">{job.company}</p>
+                <div className="relative test-info-icon">
+                  <button className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/40 hover:bg-purple-500/30 transition-all cursor-help">
+                    <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div className="test-info-tooltip">
+                      <div className="flex items-start gap-2 mb-2">
+                        <span className="text-lg">✨</span>
+                        <h4 className="font-bold text-purple-200">Why This Test Matters:</h4>
+                      </div>
+                      <p className="text-xs text-purple-100 leading-relaxed">
+                        This assessment helps recruiters understand your depth of knowledge, technical skills, and problem-solving abilities. It verifies your expertise and increases your chances of being selected for premium opportunities!
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              </div>
             </div>
             <button
               onClick={onClose}
@@ -181,28 +222,39 @@ export default function JobModal({
 
                 {/* Question */}
                 <div className="mb-6 p-4 bg-white/5 border border-white/10 rounded-lg">
-                  <h4 className="text-lg font-semibold text-white mb-4">
+                  <h4 className="text-lg font-bold bg-gradient-to-r from-blue-300 via-purple-300 to-blue-300 bg-clip-text text-transparent mb-4">
                     {currentQuestion.question}
                   </h4>
 
                   {/* Options */}
                   <div className="space-y-3">
-                    {currentQuestion.options.map((option) => (
-                      <label
-                        key={option.id}
-                        className="flex items-center p-3 bg-white/5 border border-white/10 rounded-lg cursor-pointer hover:bg-white/8 hover:border-white/20 transition-all"
-                      >
-                        <input
-                          type="radio"
-                          name={`question-${currentQuestion.id}`}
-                          value={option.id}
-                          checked={selectedAnswers[currentQuestion.id] === option.id}
-                          onChange={() => handleAnswerSelect(option.id)}
-                          className="w-4 h-4 text-blue-600 border-white/20 focus:ring-0"
-                        />
-                        <span className="ml-3 text-white/80">{option.text}</span>
-                      </label>
-                    ))}
+                    {currentQuestion.options.map((option) => {
+                      const isSelected = selectedAnswers[currentQuestion.id] === option.id;
+                      return (
+                        <label
+                          key={option.id}
+                          className={`flex items-center p-3 rounded-lg cursor-pointer transition-all ${
+                            isSelected
+                              ? "bg-purple-500/25 border-2 border-purple-400 hover:bg-purple-500/35 hover:border-purple-300"
+                              : "bg-white/5 border border-white/10 hover:bg-blue-500/15 hover:border-blue-400/40"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name={`question-${currentQuestion.id}`}
+                            value={option.id}
+                            checked={isSelected}
+                            onChange={() => handleAnswerSelect(option.id)}
+                            className="w-4 h-4 text-purple-600 border-white/20 focus:ring-0"
+                          />
+                          <span className={`ml-3 font-medium ${
+                            isSelected ? "text-purple-300 font-semibold" : "text-white/80"
+                          }`}>
+                            {option.text}
+                          </span>
+                        </label>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -231,24 +283,33 @@ export default function JobModal({
               {/* Right Side - Project Section (Sticky) */}
               <div className="lg:col-span-1">
                 <div className="sticky top-0 space-y-4">
-                  <div className="p-4 bg-white/5 border border-white/10 rounded-lg">
-                    <h4 className="text-lg font-semibold text-white mb-3">
-                      Project Requirements
+                  {/* Instructions Box - Top Priority */}
+                  <div className="p-4 bg-emerald-500/15 border border-emerald-500/30 rounded-lg">
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className="text-2xl">✅</div>
+                      <div>
+                        <h4 className="text-sm font-bold text-emerald-300 mb-2">
+                          What You Need to Do:
+                        </h4>
+                        <p className="text-xs text-emerald-200 leading-relaxed">
+                          Complete the project requirements below, then submit your GitHub link or live demo.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-4 bg-white/5 border border-white/10 rounded-lg space-y-5">
+                    <h4 className="text-lg font-bold bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
+                      📋 Project Requirements
                     </h4>
 
-                    {/* Instructions */}
-                    <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-                      <p className="text-xs text-blue-300 leading-relaxed">
-                        ℹ️ Below is the project description. Complete the project according to these requirements and submit the link to your completed work.
-                      </p>
-                    </div>
-
                     {/* Job Description (Read-only) */}
-                    <div className="mb-4">
-                      <label className="block text-sm text-white/80 mb-2 font-semibold">
-                        Project Description
+                    <div className="space-y-2">
+                      <label className="block text-sm text-white/90 font-bold flex items-center gap-2">
+                        <span className="text-lg">📝</span>
+                        What to Build
                       </label>
-                      <div className="p-3 bg-white/5 border border-white/10 rounded-lg">
+                      <div className="p-3.5 bg-blue-500/10 border border-blue-500/20 rounded-lg">
                         <p className="text-sm text-white/90 leading-relaxed">
                           {job.description}
                         </p>
@@ -256,64 +317,69 @@ export default function JobModal({
                     </div>
 
                     {/* Project Link Input */}
-                    <div className="mb-4">
-                      <label className="block text-sm text-white/80 mb-2 font-semibold">
-                        Your Project Link
+                    <div className="space-y-2">
+                      <label className="block text-sm text-white/90 font-bold flex items-center gap-2">
+                        <span className="text-lg">🔗</span>
+                        Submit Your Work
                       </label>
                       <input
                         type="url"
                         value={projectLink}
                         onChange={(e) => setProjectLink(e.target.value)}
-                        placeholder="https://github.com/yourname/project or https://your-project.com"
-                        className="w-full px-3 py-2 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:border-white/40 focus:bg-white/10 transition-colors"
+                        placeholder="https://github.com/yourname/project"
+                        className="w-full px-3.5 py-2.5 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/40 text-sm focus:outline-none focus:border-purple-400/60 focus:bg-white/10 transition-colors"
                       />
                       {projectLink && !isLinkValid(projectLink) && (
-                        <p className="text-xs text-red-400 mt-2">
-                          ❌ Please enter a valid URL
+                        <p className="text-xs text-red-400 mt-2 flex items-center gap-1">
+                          ❌ Invalid URL - Please enter a valid link
                         </p>
                       )}
                       {projectLink && isLinkValid(projectLink) && (
-                        <p className="text-xs text-green-400 mt-2">
-                          ✅ Valid URL
+                        <p className="text-xs text-emerald-400 mt-2 flex items-center gap-1">
+                          ✅ URL looks good!
                         </p>
                       )}
                       <p className="text-xs text-white/50 mt-2">
-                        Share your GitHub repo, live demo, or portfolio link
+                        💡 Share GitHub repo, live demo, or portfolio
                       </p>
                     </div>
 
                     {/* Validation Checklist */}
-                    <div className="p-3 bg-white/5 border border-white/10 rounded-lg mb-4">
-                      <p className="text-xs text-white/70 font-semibold mb-2">
-                        Submission Requirements:
+                    <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg mb-4">
+                      <p className="text-sm text-amber-300 font-bold mb-3">
+                        ⚡ Before You Submit:
                       </p>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
+                      <div className="space-y-2.5">
+                        <div className="flex items-center gap-3">
                           <div
-                            className={`w-4 h-4 rounded-full flex items-center justify-center text-xs ${
+                            className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
                               allQuestionsAnswered
-                                ? "bg-green-500 text-green-900"
-                                : "bg-white/20"
+                                ? "bg-emerald-500 text-emerald-900"
+                                : "bg-white/20 text-white/40"
                             }`}
                           >
-                            {allQuestionsAnswered && "✓"}
+                            {allQuestionsAnswered ? "✓" : "1"}
                           </div>
-                          <span className="text-xs text-white/70">
-                            All 10 questions answered
+                          <span className={`text-xs font-medium ${
+                            allQuestionsAnswered ? "text-emerald-300" : "text-white/60"
+                          }`}>
+                            Answer all 10 questions
                           </span>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
                           <div
-                            className={`w-4 h-4 rounded-full flex items-center justify-center text-xs ${
+                            className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
                               projectLink && isLinkValid(projectLink)
-                                ? "bg-green-500 text-green-900"
-                                : "bg-white/20"
+                                ? "bg-emerald-500 text-emerald-900"
+                                : "bg-white/20 text-white/40"
                             }`}
                           >
-                            {projectLink && isLinkValid(projectLink) && "✓"}
+                            {projectLink && isLinkValid(projectLink) ? "✓" : "2"}
                           </div>
-                          <span className="text-xs text-white/70">
-                            Valid project link submitted
+                          <span className={`text-xs font-medium ${
+                            projectLink && isLinkValid(projectLink) ? "text-emerald-300" : "text-white/60"
+                          }`}>
+                            Submit your project link
                           </span>
                         </div>
                       </div>

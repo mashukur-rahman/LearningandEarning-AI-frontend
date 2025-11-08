@@ -118,6 +118,32 @@ export default function BrowseJobsPage() {
             </div>
           </div>
 
+          {/* AI Assessment Explanation */}
+          <div className="mb-8 rounded-xl border border-amber-500/20 bg-amber-500/10 backdrop-blur-md p-6 flex items-start gap-4">
+            <style>{`
+              @keyframes bulb-glow {
+                0%, 100% { transform: scale(1) rotateZ(0deg); filter: drop-shadow(0 0 2px rgba(251, 191, 36, 0.2)); }
+                50% { transform: scale(1.05) rotateZ(3deg); filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.4)); }
+              }
+              .idea-bulb {
+                display: inline-block;
+                animation: bulb-glow 3.5s ease-in-out infinite;
+                font-size: 24px;
+              }
+            `}</style>
+            <div className="flex gap-3 flex-1">
+              <div className="idea-bulb flex-shrink-0">💡</div>
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold text-amber-300 mb-2">
+                  Why Take Our AI-Powered Assessment?
+                </h3>
+                <p className="text-sm text-amber-200/70 leading-relaxed">
+                  Our AI assessment evaluates your technical skills and project capabilities, helping clients identify top performers. By completing the test and submitting quality work, you significantly increase your chances of being shortlisted. The more jobs you apply for with verified skills, the higher your profile visibility and chances of landing premium opportunities!
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Jobs Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {mockJobs.map((job) => (

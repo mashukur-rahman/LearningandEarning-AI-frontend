@@ -100,7 +100,7 @@ export default function DashboardSidebar({
   const clientLinks: NavItem[] = [
     { label: "Dashboard", href: "/client-dashboard", icon: renderIcon("dashboard") },
     { label: "Post a Job", href: "/post-jobs", icon: renderIcon("post") },
-    { label: "My Jobs", href: "/my-posted-jobs", icon: renderIcon("jobs") },
+    { label: "Candidates Progress", href: "/my-posted-jobs", icon: renderIcon("jobs") },
     { label: "Messages", href: "/messages", icon: renderIcon("messages") },
     { label: "Payments", href: "/payments", icon: renderIcon("payments") },
     { label: "Profile", href: "/profile", icon: renderIcon("profile") },

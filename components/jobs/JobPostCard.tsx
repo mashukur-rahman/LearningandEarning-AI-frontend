@@ -70,10 +70,10 @@ export default function JobPostCard({
       {/* Candidates Count with AI Badge */}
       <div className="mb-5 flex items-end justify-between gap-4">
         <div className="flex items-center gap-2">
-          <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
             <path d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          <p className="text-xs font-semibold text-blue-300">AI Recommended</p>
+          <p className="text-xs font-semibold text-purple-300">AI Recommended</p>
         </div>
         <p className="text-3xl font-bold text-amber-400">
           {job.shortlistedCandidateIds.length}
@@ -84,7 +84,7 @@ export default function JobPostCard({
       {job.shortlistedCandidateIds.length > 0 ? (
         <button
           onClick={() => onViewCandidates(job)}
-          className="w-full py-3 px-4 bg-purple-800 hover:bg-purple-700 text-white rounded-lg font-medium transition-all duration-200 border border-purple-600/40 hover:border-purple-500/60 hover:shadow-lg hover:shadow-purple-500/20 active:scale-95"
+          className="w-full py-3 px-4 bg-blue-700 hover:bg-blue-800 text-white rounded-lg font-medium transition-all duration-200 border border-blue-600/40 hover:border-blue-500/60 hover:shadow-lg hover:shadow-blue-500/20 active:scale-95"
         >
           View Candidates
         </button>

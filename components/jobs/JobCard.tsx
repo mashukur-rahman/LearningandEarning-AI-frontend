@@ -33,14 +33,14 @@ export default function JobCard({ job, onApply, applied = false }: JobCardProps)
       className={`rounded-2xl border backdrop-blur-md p-6 transition-all duration-300 ${
         applied
           ? "bg-white/3 border-white/5 opacity-60"
-          : "bg-white/5 border-white/10 hover:bg-white/8 hover:border-white/20"
+          : "bg-white/5 border-white/10 hover:bg-purple-500/8 hover:border-purple-400/20 hover:shadow-lg hover:shadow-purple-500/15"
       }`}
     >
       {/* Header */}
       <div className="mb-4">
         <div className="flex items-start justify-between gap-4 mb-2">
           <div>
-            <h3 className="text-lg font-semibold text-white mb-1">
+            <h3 className="text-xl font-bold bg-gradient-to-r from-purple-300 via-blue-300 to-purple-300 bg-clip-text text-transparent mb-1">
               {job.title}
             </h3>
             <p className="text-sm text-white/60">{job.company}</p>
@@ -58,10 +58,10 @@ export default function JobCard({ job, onApply, applied = false }: JobCardProps)
         {job.description}
       </p>
 
-      {/* Budget */}
-      <div className="mb-4 p-3 bg-white/5 rounded-lg border border-white/10">
-        <p className="text-sm text-white/60 mb-1">Budget</p>
-        <p className="text-lg font-semibold text-blue-400">{job.budget}</p>
+      {/* Earnings */}
+      <div className="mb-4 p-3 bg-emerald-500/10 rounded-lg border border-emerald-500/20 hover:border-emerald-500/40 transition-all">
+        <p className="text-sm text-white/60 mb-1">You'll Earn</p>
+        <p className="text-lg font-semibold text-emerald-400">{job.budget}</p>
       </div>
 
       {/* Skills */}
@@ -80,11 +80,11 @@ export default function JobCard({ job, onApply, applied = false }: JobCardProps)
       </div>
 
       {/* Timer */}
-      <div className="mb-4 p-3 bg-white/5 rounded-lg border border-white/10">
+      <div className="mb-4 p-3 bg-purple-500/10 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-all">
         <p className="text-xs text-white/60 mb-1">Time Remaining</p>
         <p
           className={`text-2xl font-mono font-bold ${
-            isTimeUp ? "text-red-400" : "text-white"
+            isTimeUp ? "text-red-400" : "text-purple-300"
           }`}
         >
           {getTimeString(timeRemaining)}
