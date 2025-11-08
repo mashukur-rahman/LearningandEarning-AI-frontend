@@ -42,7 +42,7 @@ export const mockJobPostings: JobPosting[] = [
     budget: "৳180000 - ৳450000+",
     createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
     createdBy: "dummy",
-    shortlistedCandidateIds: ["c1", "c2", "c6", "c9", "c11", "c14", "c16", "c19", "c22", "c25"],
+    shortlistedCandidateIds: ["c1", "c3", "c4", "c6", "c7", "c8", "c11", "c12", "c14", "c15"],
   },
   {
     id: "jp2",
@@ -55,7 +55,7 @@ export const mockJobPostings: JobPosting[] = [
     budget: "৳70000 - ৳180000",
     createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
     createdBy: "dummy",
-    shortlistedCandidateIds: ["c3", "c4", "c7", "c8", "c12", "c15", "c17", "c20", "c23", "c24", "c27", "c29"],
+    shortlistedCandidateIds: ["c2", "c3", "c5", "c7", "c8", "c10", "c12", "c15", "c18", "c20", "c21", "c24"],
   },
   {
     id: "jp3",
@@ -68,7 +68,7 @@ export const mockJobPostings: JobPosting[] = [
     budget: "৳70000 - ৳180000",
     createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
     createdBy: "dummy",
-    shortlistedCandidateIds: ["c4", "c8", "c12", "c24"],
+    shortlistedCandidateIds: ["c4", "c5", "c8", "c10", "c12", "c18"],
   },
   {
     id: "jp4",
@@ -81,7 +81,7 @@ export const mockJobPostings: JobPosting[] = [
     budget: "৳180000 - ৳450000+",
     createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
     createdBy: "dummy",
-    shortlistedCandidateIds: ["c2", "c6", "c9", "c11", "c14", "c16", "c19", "c22"],
+    shortlistedCandidateIds: ["c1", "c2", "c6", "c7", "c9", "c11", "c14", "c15"],
   },
   {
     id: "jp5",

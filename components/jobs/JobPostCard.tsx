@@ -43,52 +43,55 @@ export default function JobPostCard({
   );
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 hover:bg-white/8 hover:border-white/20 transition-all duration-300">
+    <div className="group rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-500/10 to-blue-500/10 backdrop-blur-md p-6 hover:border-purple-500/40 hover:from-purple-500/15 hover:to-blue-500/15 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
       {/* Header */}
-      <div className="flex items-start justify-between gap-4 mb-3">
-        <h3 className="text-lg font-semibold text-white flex-1">{job.title}</h3>
-        <div className="text-xs text-white/50 whitespace-nowrap">{formattedDate}</div>
-      </div>
-
-      {/* Description */}
-      <p className="text-sm text-white/70 mb-4 line-clamp-2">
-        {job.description}
-      </p>
-
-      {/* Expertise & Budget */}
-      <div className="flex items-center gap-2 mb-4 flex-wrap">
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <h3 className="text-lg font-bold text-white leading-tight flex-1">{job.title}</h3>
         <span
-          className={`px-3 py-1 rounded-lg border text-xs font-medium ${getExpertiseBadgeColor(
+          className={`px-2.5 py-1 rounded-full border text-xs font-semibold whitespace-nowrap ${getExpertiseBadgeColor(
             job.expertiseLevel
           )}`}
         >
           {getExpertiseLabel(job.expertiseLevel)}
         </span>
-        <span className="text-sm text-blue-400 font-semibold">{job.budget}</span>
       </div>
 
-      {/* Shortlisted Count */}
-      <div className="p-3 bg-white/5 border border-white/10 rounded-lg mb-4">
-        <div className="flex items-center justify-between">
-          <p className="text-xs text-white/60">Shortlisted Candidates</p>
-          <p className="text-2xl font-bold text-white">
-            {job.shortlistedCandidateIds.length}
-          </p>
+      {/* Description Snippet */}
+      <p className="text-sm text-white/60 mb-4 line-clamp-2 leading-relaxed">
+        {job.description}
+      </p>
+
+      {/* Budget & Date */}
+      <div className="flex items-center justify-between mb-5 pb-4 border-b border-white/10">
+        <span className="text-sm font-bold text-amber-400">{job.budget}</span>
+        <div className="text-xs text-white/40">{formattedDate}</div>
+      </div>
+
+      {/* Candidates Count with AI Badge */}
+      <div className="mb-5 flex items-end justify-between gap-4">
+        <div className="flex items-center gap-2">
+          <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          <p className="text-xs font-semibold text-blue-300">AI Recommended</p>
         </div>
+        <p className="text-3xl font-bold text-amber-400">
+          {job.shortlistedCandidateIds.length}
+        </p>
       </div>
 
-      {/* View Button */}
+      {/* View Button - Enhanced */}
       {job.shortlistedCandidateIds.length > 0 ? (
         <button
           onClick={() => onViewCandidates(job)}
-          className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+          className="w-full py-3 px-4 bg-purple-800 hover:bg-purple-700 text-white rounded-lg font-medium transition-all duration-200 border border-purple-600/40 hover:border-purple-500/60 hover:shadow-lg hover:shadow-purple-500/20 active:scale-95"
         >
-          View Shortlisted Candidates
+          View Candidates
         </button>
       ) : (
         <button
           disabled
-          className="w-full py-2.5 px-4 bg-white/5 text-white/40 rounded-lg font-medium border border-white/10 cursor-not-allowed"
+          className="w-full py-3 px-4 bg-white/5 text-white/40 rounded-lg font-medium border border-white/10 cursor-not-allowed"
         >
           No Candidates Yet
         </button>

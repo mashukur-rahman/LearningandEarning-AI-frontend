@@ -15,15 +15,39 @@ import {
   getClientJobStats,
 } from "@/data/jobs/mockClientJobs";
 
-// Mock data
-const mockActiveJobs = getOngoingClientJobs().map((job) => ({
+// Mock data with realistic company names and updated deadlines
+const companyNames = [
+  "TechStart Inc",
+  "Digital Solutions Ltd",
+  "CloudScale Systems",
+  "Enterprise Solutions Co",
+];
+
+const mockActiveJobs = getOngoingClientJobs().map((job, index) => ({
   id: job.id,
   title: job.title,
-  client: "Your Company",
-  deadline: job.deadline || "2024-12-20",
+  client: companyNames[index % companyNames.length],
+  deadline: job.deadline ? updateDateToFuture(job.deadline) : "2025-12-20",
   status: "active" as const,
   progress: job.progress || 0,
 }));
+
+// Helper function to update dates to be after Nov 8, 2025
+function updateDateToFuture(dateStr: string): string {
+  const date = new Date(dateStr);
+  const baseDate = new Date("2025-11-08");
+
+  if (date < baseDate) {
+    // If date is in the past, add months to make it future
+    const monthDiff = (date.getMonth() - baseDate.getMonth()) +
+      (12 * (date.getFullYear() - baseDate.getFullYear()));
+    const newDate = new Date(baseDate);
+    newDate.setMonth(newDate.getMonth() + Math.abs(monthDiff) + 1);
+    return newDate.toISOString().split('T')[0];
+  }
+
+  return dateStr;
+}
 
 const mockPastJobs = getCompletedClientJobs().map((job) => ({
   id: job.id,
@@ -111,14 +135,6 @@ export default function ClientDashboard() {
                 Welcome, {user?.name.split(" ")[0]}!
               </h1>
             </div>
-
-            {/* Quick Actions */}
-            <Link
-              href="/post-job"
-              className="hidden rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 sm:inline-block"
-            >
-              Post a Job
-            </Link>
           </div>
         </header>
 
@@ -146,17 +162,32 @@ export default function ClientDashboard() {
             <PostJobSection />
           </section>
 
-          {/* Active Posted Jobs Section */}
+          {/* In Progress Projects Section */}
           <section className="mb-8">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-white">
-                Active Jobs ({mockActiveJobs.length})
-              </h2>
+              <div>
+                <div className="flex items-center gap-3 mb-1">
+                  <div className="p-2 bg-blue-500/20 rounded-lg">
+                    <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                  </div>
+                  <h2 className="text-2xl font-bold text-white">
+                    In Progress Projects ({mockActiveJobs.length})
+                  </h2>
+                </div>
+                <p className="text-sm text-gray-400 ml-11">
+                  Active freelancers working on your projects
+                </p>
+              </div>
               <Link
                 href="/my-posted-jobs"
-                className="text-sm font-medium text-blue-400 transition-colors hover:text-blue-300"
+                className="text-sm font-semibold text-blue-400 transition-all hover:text-blue-300 hover:gap-2 inline-flex items-center gap-1"
               >
                 View All
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
               </Link>
             </div>
             <ActiveJobs jobs={mockActiveJobs} dashboardType="client" />
@@ -165,12 +196,19 @@ export default function ClientDashboard() {
           {/* Past Posted Jobs Section */}
           <section className="mb-8">
             <div
-              className="mb-4 flex cursor-pointer items-center justify-between rounded-lg border border-white/10 bg-white/5 p-4 backdrop-blur-md hover:bg-white/10"
+              className="mb-4 flex cursor-pointer items-center justify-between rounded-lg border border-white/10 bg-white/5 p-4 backdrop-blur-md hover:bg-white/10 transition-all hover:border-white/20"
               onClick={() => setShowPastJobs(!showPastJobs)}
             >
-              <h2 className="text-lg font-semibold text-white">
-                Past Jobs ({mockPastJobs.length})
-              </h2>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-green-500/20 rounded-lg">
+                  <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h2 className="text-lg font-semibold text-white">
+                  Completed Projects ({mockPastJobs.length})
+                </h2>
+              </div>
               <div
                 className={`transition-transform ${
                   showPastJobs ? "rotate-180" : ""

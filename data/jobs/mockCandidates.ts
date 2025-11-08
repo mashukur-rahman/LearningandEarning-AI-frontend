@@ -1,5 +1,11 @@
 export type ExpertiseLevel = "beginner" | "intermediate" | "expert";
 
+export interface Review {
+  clientName: string;
+  rating: number;
+  feedback: string;
+}
+
 export interface Candidate {
   id: string;
   name: string;
@@ -9,6 +15,9 @@ export interface Candidate {
   completedProjects: number;
   bio: string;
   avatar: string; // Initial letter for avatar
+  email?: string;
+  location?: string;
+  reviews?: Review[];
 }
 
 export const mockCandidates: Candidate[] = [
@@ -21,6 +30,20 @@ export const mockCandidates: Candidate[] = [
     completedProjects: 42,
     bio: "Full-stack developer with 8+ years experience in React, Node.js, and TypeScript",
     avatar: "A",
+    email: "alex.johnson@email.com",
+    location: "San Francisco, CA",
+    reviews: [
+      {
+        clientName: "TechStart Inc",
+        rating: 5,
+        feedback: "Excellent work on our React migration project. Very professional and delivered on time.",
+      },
+      {
+        clientName: "Digital Solutions Ltd",
+        rating: 4.7,
+        feedback: "Great communication and technical expertise. Would hire again for backend work.",
+      },
+    ],
   },
   {
     id: "c2",
@@ -31,6 +54,25 @@ export const mockCandidates: Candidate[] = [
     completedProjects: 58,
     bio: "Senior frontend architect specializing in performance optimization and scalability",
     avatar: "S",
+    email: "sarah.chen@email.com",
+    location: "New York, NY",
+    reviews: [
+      {
+        clientName: "CloudScale Systems",
+        rating: 5,
+        feedback: "Outstanding performance optimization work. Our app load time improved by 60%.",
+      },
+      {
+        clientName: "Enterprise Solutions Co",
+        rating: 4.8,
+        feedback: "Highly skilled architect who thinks about scalability from day one.",
+      },
+      {
+        clientName: "StartupHub",
+        rating: 4.9,
+        feedback: "Professional, responsive, and delivered exceptional results on our dashboard project.",
+      },
+    ],
   },
   {
     id: "c3",
@@ -51,6 +93,20 @@ export const mockCandidates: Candidate[] = [
     completedProjects: 22,
     bio: "Frontend developer focused on responsive design and user experience",
     avatar: "E",
+    email: "emily.davis@email.com",
+    location: "Austin, TX",
+    reviews: [
+      {
+        clientName: "Design Agency Pro",
+        rating: 4.6,
+        feedback: "Great eye for responsive design. Implemented our Figma designs perfectly.",
+      },
+      {
+        clientName: "Mobile First Co",
+        rating: 4.4,
+        feedback: "Good communication and delivered mobile-first UI as expected.",
+      },
+    ],
   },
   {
     id: "c5",

@@ -13,8 +13,8 @@ export default function PostJobSection() {
           </p>
         </div>
         <Link
-          href="/post-job"
-          className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+          href="/post-jobs"
+          className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:from-blue-500 hover:to-blue-600 hover:shadow-lg hover:shadow-blue-500/50 active:scale-95 cursor-pointer border border-blue-500/50 hover:border-blue-400"
         >
           <span>✏️</span>
           <span>Post a Job</span>

@@ -132,7 +132,7 @@ export default function MyPostedJobsPage() {
                   />
                 </svg>
               </button>
-              <h1 className="text-2xl font-bold text-white">My Posted Jobs</h1>
+              <h1 className="text-2xl font-bold text-white">Active Projects & Progress</h1>
             </div>
 
             {/* Back to Dashboard */}

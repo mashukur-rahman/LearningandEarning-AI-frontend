@@ -148,17 +148,17 @@ export default function PostJobsPage() {
 
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* My Job Postings Section */}
+          {/* Active Job Listings Section */}
           <div className="mb-16">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-white mb-1">My Job Postings</h2>
+              <h2 className="text-2xl font-bold text-white mb-1">Active Job Listings</h2>
               <p className="text-white/60">
-                Jobs you have posted and are waiting for applications
+                Manage your job postings and monitor AI-matched candidates
               </p>
             </div>
 
             {createdJobs.length === 0 ? (
-              <div className="text-center py-12 rounded-2xl border border-white/10 bg-white/5">
+              <div className="text-center py-12 rounded-2xl border border-white/10 bg-white/5 transition-all duration-300 hover:border-blue-500/40 hover:bg-white/8 hover:shadow-lg hover:shadow-blue-500/30">
                 <svg
                   className="w-16 h-16 text-white/40 mx-auto mb-4"
                   fill="none"
@@ -173,14 +173,14 @@ export default function PostJobsPage() {
                   />
                 </svg>
                 <h3 className="text-xl font-semibold text-white mb-2">
-                  No jobs posted yet
+                  Ready to post a new job?
                 </h3>
                 <p className="text-white/60 mb-6">
-                  Create your first job posting to attract talented freelancers
+                  Click the button below to create a new job posting and find talented freelancers
                 </p>
                 <button
                   onClick={() => setShowCreateModal(true)}
-                  className="inline-flex items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 px-6 py-3 text-sm font-medium text-white transition-colors"
+                  className="inline-flex items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 px-6 py-3 text-sm font-medium text-white transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/50"
                 >
                   <svg
                     className="w-4 h-4"
@@ -195,7 +195,7 @@ export default function PostJobsPage() {
                       d="M12 4v16m8-8H4"
                     />
                   </svg>
-                  Create Your First Job
+                  Add a New Job
                 </button>
               </div>
             ) : (
@@ -211,15 +211,34 @@ export default function PostJobsPage() {
             )}
           </div>
 
-          {/* Browse Shortlisted Candidates Section */}
+          {/* Featured Job Opportunities Section */}
           <div>
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-white mb-1">
-                Browse Shortlisted Candidates
+              <h2 className="text-2xl font-bold text-white mb-2">
+                Featured AI Candidates
               </h2>
               <p className="text-white/60">
-                Explore example job postings and talented candidates
+                Browse AI-recommended qualified candidates ready to work on your projects
               </p>
+            </div>
+
+            {/* AI-Powered Matching Explanation */}
+            <div className="mb-8 rounded-xl border border-blue-500/20 bg-blue-500/10 backdrop-blur-md p-5 flex items-start gap-4">
+              <svg
+                className="w-6 h-6 text-blue-400 flex-shrink-0 mt-0.5"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <div>
+                <h3 className="text-sm font-semibold text-blue-300 mb-1">
+                  AI-Powered Matching:
+                </h3>
+                <p className="text-sm text-blue-200/70 leading-relaxed">
+                  Our AI analyzes your job requirements and intelligently matches you with the most qualified candidates from our platform. Post a job above and let our system find your perfect match!
+                </p>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

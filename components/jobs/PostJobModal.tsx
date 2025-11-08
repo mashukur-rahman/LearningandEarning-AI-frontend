@@ -66,12 +66,11 @@ export default function PostJobModal({
       requirements,
       expertiseLevel,
     });
+  };
 
-    // Auto close after 1.5 seconds
-    setTimeout(() => {
-      setSubmissionState("idle");
-      onClose();
-    }, 1500);
+  const handleCloseSuccess = () => {
+    setSubmissionState("idle");
+    onClose();
   };
 
   const budget = getBudgetForExpertise(expertiseLevel);
@@ -108,27 +107,71 @@ export default function PostJobModal({
         {/* Content */}
         <div className="p-6">
           {submissionState === "success" ? (
-            // Success State
+            // Success State with Enhanced UX
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="w-16 h-16 bg-green-500/20 border border-green-500/30 rounded-full flex items-center justify-center mb-4">
-                <svg
-                  className="w-8 h-8 text-green-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+              {/* Animated Success Icon */}
+              <div className="relative mb-6">
+                <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center animate-pulse">
+                  <svg
+                    className="w-10 h-10 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Success!</h3>
-              <p className="text-white/70">
-                Your job has been posted successfully
+
+              {/* Main Message */}
+              <h3 className="text-3xl font-bold text-white mb-3">
+                Job Posted Successfully! 🎉
+              </h3>
+
+              {/* Subheading */}
+              <p className="text-lg text-blue-300 mb-6 font-semibold">
+                Your job is live and candidates are being matched
               </p>
+
+              {/* Details */}
+              <div className="space-y-3 mb-8">
+                <div className="flex items-center justify-center gap-3 text-white/80">
+                  <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>AI is analyzing requirements and finding best matches</span>
+                </div>
+                <div className="flex items-center justify-center gap-3 text-white/80">
+                  <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Top candidates will appear in Featured Job Opportunities</span>
+                </div>
+                <div className="flex items-center justify-center gap-3 text-white/80">
+                  <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Review profiles and send offers to your ideal match</span>
+                </div>
+              </div>
+
+              {/* CTA Text */}
+              <p className="text-sm text-white/60 mb-8 max-w-sm">
+                Once candidates are found, scroll down to <span className="text-blue-300 font-semibold">Featured Job Opportunities</span> to view and connect with them
+              </p>
+
+              {/* Close Button */}
+              <button
+                onClick={handleCloseSuccess}
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+              >
+                View Featured Opportunities
+              </button>
             </div>
           ) : (
             // Form State
