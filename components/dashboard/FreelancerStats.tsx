@@ -10,11 +10,17 @@ interface StatCard {
 interface FreelancerStatsProps {
   jobsCompleted: number;
   level: string;
+  activeJobs?: number;
+  totalEarnings?: number;
+  averageRating?: number;
 }
 
 export default function FreelancerStats({
   jobsCompleted,
   level,
+  activeJobs = 0,
+  totalEarnings = 0,
+  averageRating = 0,
 }: FreelancerStatsProps) {
   const stats: StatCard[] = [
     {
@@ -29,10 +35,40 @@ export default function FreelancerStats({
       icon: "✓",
       color: "from-green-500/20 to-green-600/10",
     },
+    ...(activeJobs > 0
+      ? [
+          {
+            label: "Active Jobs",
+            value: activeJobs,
+            icon: "🚀",
+            color: "from-purple-500/20 to-purple-600/10",
+          } as StatCard,
+        ]
+      : []),
+    ...(totalEarnings > 0
+      ? [
+          {
+            label: "Total Earnings",
+            value: `৳${(totalEarnings / 100000).toFixed(1)}L`,
+            icon: "💰",
+            color: "from-yellow-500/20 to-yellow-600/10",
+          } as StatCard,
+        ]
+      : []),
+    ...(averageRating > 0
+      ? [
+          {
+            label: "Avg Rating",
+            value: `${averageRating.toFixed(1)} ⭐`,
+            icon: "📊",
+            color: "from-pink-500/20 to-pink-600/10",
+          } as StatCard,
+        ]
+      : []),
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
       {stats.map((stat) => (
         <div
           key={stat.label}

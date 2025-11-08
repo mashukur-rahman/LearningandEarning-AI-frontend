@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import "./scrollbar.css";
 
 interface Conversation {
   id: string;
@@ -75,7 +76,7 @@ export default function ConversationList({
       </div>
 
       {/* Conversations List */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="custom-scrollbar flex-1 overflow-y-auto">
         {filteredConversations.length === 0 ? (
           <div className="flex h-full items-center justify-center p-8 text-center">
             <div>

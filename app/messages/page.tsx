@@ -82,12 +82,12 @@ export default function MessagesPage() {
         </div>
 
         {/* Two-column layout */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3" style={{ height: 'calc(100vh - 250px)' }}>
+        <div className="grid grid-cols-1 gap-4 overflow-hidden md:grid-cols-3" style={{ height: '700px' }}>
           {/* Conversation List - Left Panel */}
           <div
             className={`${
               isMobileView && !showConversationList ? "hidden" : "block"
-            } h-full md:col-span-1 md:block`}
+            } h-full overflow-hidden md:col-span-1 md:block`}
           >
             <ConversationList
               conversations={conversations}
@@ -100,7 +100,7 @@ export default function MessagesPage() {
           <div
             className={`${
               isMobileView && showConversationList ? "hidden" : "block"
-            } h-full md:col-span-2 md:block`}
+            } h-full overflow-hidden md:col-span-2 md:block`}
           >
             {selectedConversation ? (
               <ChatView

@@ -11,12 +11,18 @@ interface ClientStatsProps {
   jobsPosted: number;
   activeJobs: number;
   totalSpend: string;
+  completedJobs?: number;
+  totalApplicants?: number;
+  averageRating?: number;
 }
 
 export default function ClientStats({
   jobsPosted,
   activeJobs,
   totalSpend,
+  completedJobs = 0,
+  totalApplicants = 0,
+  averageRating = 0,
 }: ClientStatsProps) {
   const stats: StatCard[] = [
     {
@@ -37,10 +43,40 @@ export default function ClientStats({
       icon: "💳",
       color: "from-green-500/20 to-green-600/10",
     },
+    ...(completedJobs > 0
+      ? [
+          {
+            label: "Completed Jobs",
+            value: completedJobs,
+            icon: "✓",
+            color: "from-emerald-500/20 to-emerald-600/10",
+          } as StatCard,
+        ]
+      : []),
+    ...(totalApplicants > 0
+      ? [
+          {
+            label: "Total Applicants",
+            value: totalApplicants,
+            icon: "👥",
+            color: "from-purple-500/20 to-purple-600/10",
+          } as StatCard,
+        ]
+      : []),
+    ...(averageRating > 0
+      ? [
+          {
+            label: "Avg Rating",
+            value: `${averageRating.toFixed(1)} ⭐`,
+            icon: "⭐",
+            color: "from-pink-500/20 to-pink-600/10",
+          } as StatCard,
+        ]
+      : []),
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
       {stats.map((stat) => (
         <div
           key={stat.label}
