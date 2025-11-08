@@ -4,6 +4,7 @@ import { useAuth } from "@/app/context/AuthContext";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+import TestCompletionModal from "@/components/certifications/TestCompletionModal";
 import Link from "next/link";
 
 // Mock test questions
@@ -82,6 +83,7 @@ export default function TestPage() {
   const [answers, setAnswers] = useState<Record<string, string | number>>({});
   const [recordingTime, setRecordingTime] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showCompletionModal, setShowCompletionModal] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -223,8 +225,18 @@ export default function TestPage() {
     console.log("Test answers:", answers);
     console.log("Recording time:", recordingTime, "seconds");
 
-    alert("Test submitted successfully! Your recording has been saved.");
+    setIsSubmitting(false);
+    setShowCompletionModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowCompletionModal(false);
     router.push(`/courses/${courseId}`);
+  };
+
+  const handleViewCertifications = () => {
+    setShowCompletionModal(false);
+    router.push("/certification");
   };
 
   const formatTime = (seconds: number) => {
@@ -463,6 +475,13 @@ export default function TestPage() {
           )}
         </div>
       </main>
+
+      {/* Test Completion Modal */}
+      <TestCompletionModal
+        isOpen={showCompletionModal}
+        onClose={handleCloseModal}
+        onViewCertifications={handleViewCertifications}
+      />
     </div>
   );
 }
